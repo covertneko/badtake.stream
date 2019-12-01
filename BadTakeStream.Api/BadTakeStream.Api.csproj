@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <RootNamespace>BadTakeStream.Api</RootNamespace>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileRunEnvironmentFiles>../dev.env</DockerfileRunEnvironmentFiles>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.8.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.9.5" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.0.0" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.0.1" />
+    <PackageReference Include="Serilog" Version="2.9.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="3.2.0" />
+    <PackageReference Include="Serilog.Settings.Configuration" Version="3.1.0" />
+    <PackageReference Include="Serilog.Sinks.GoogleCloudLogging" Version="2.2.0" />
+    <PackageReference Include="Serilog.Sinks.Seq" Version="4.0.0" />
+    <PackageReference Include="StackExchange.Redis" Version="2.0.601" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BadTakeStream.Shared\BadTakeStream.Shared.csproj" />
+  </ItemGroup>
+
+  <Target Name="AddAssemblyAliasToReactiveAsync" AfterTargets="ResolveAssemblyReferences">
+    <ItemGroup>
+      <ReferencePath Condition=" '%(FileName)' == 'System.Interactive.Async' ">
+        <Aliases>reactive</Aliases>
+      </ReferencePath>
+    </ItemGroup>
+  </Target>
+
+</Project>

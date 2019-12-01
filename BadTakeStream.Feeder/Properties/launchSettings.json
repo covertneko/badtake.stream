@@ -1,0 +1,13 @@
+{
+  "profiles": {
+    "BadMemeStream.Feeder": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "GOOGLE_APPLICATION_CREDENTIALS": "C:/Data/badmemestream-pubsub-key.json"
+      }
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}

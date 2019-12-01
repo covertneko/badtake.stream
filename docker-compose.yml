@@ -1,0 +1,36 @@
+version: '3'
+services:
+  web:
+    build:
+      context: ./badtake.stream
+    image: cr.winkel.io/badtake.stream/web
+    depends_on:
+      - api
+    ports:
+      - '8080:80'
+
+  api:
+    build:
+      context: ./
+      dockerfile: ./BadTakeStream.Api/Dockerfile
+    image: cr.winkel.io/badtake.stream/api
+    depends_on:
+      - feeder
+      - redis
+    ports:
+      - '8081:80'
+    env_file:
+      - dev.env
+
+  feeder:
+    build:
+      context: ./
+      dockerfile: ./BadTakeStream.Feeder/Dockerfile
+    image: cr.winkel.io/badtake.stream/feeder
+    depends_on:
+      - redis
+    env_file:
+      - dev.env
+
+  redis:
+    image: redis:alpine

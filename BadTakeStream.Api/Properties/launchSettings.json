@@ -1,0 +1,39 @@
+{
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iis": {
+      "applicationUrl": "http://localhost/BadMemeStream",
+      "sslPort": 0
+    },
+    "iisExpress": {
+      "applicationUrl": "http://localhost/badmemestream-api",
+      "sslPort": 0
+    }
+  },
+  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "IIS Express": {
+      "commandName": "IIS",
+      "environmentVariables": {
+        "GOOGLE_APPLICATION_CREDENTIALS": "C:/Data/badmemestream-pubsub-key.json",
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "twitterstream_api": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "weatherforecast",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:5001;http://localhost:5000"
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+      "environmentVariables": {},
+      "httpPort": 10000
+    }
+  }
+}

@@ -1,0 +1,59 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29509.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BadTakeStream.Api", "BadTakeStream.Api\BadTakeStream.Api.csproj", "{3A8B8AEE-360F-4427-B8F8-4B1C82B2C7F0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BadTakeStream.Feeder", "BadTakeStream.Feeder\BadTakeStream.Feeder.csproj", "{DD3AC79B-1EBB-4B9D-AFAA-D2A2F4486437}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BadTakeStream.Shared", "BadTakeStream.Shared\BadTakeStream.Shared.csproj", "{ECBB1A51-E3D6-468B-9F01-9E244EA114B9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AB20EAFD-BDE7-4C99-91C6-4713CDBA32D1}"
+	ProjectSection(SolutionItems) = preProject
+		.dockerignore = .dockerignore
+		.gitignore = .gitignore
+		dev.env = dev.env
+		docker-compose.ecs.yml = docker-compose.ecs.yml
+		docker-compose.yml = docker-compose.yml
+		prod.env = prod.env
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "kubernetes", "kubernetes", "{D50BDA20-0CA0-4AF2-B571-95E3E7D0582E}"
+	ProjectSection(SolutionItems) = preProject
+		kubernetes\env.dev.configmap.yaml = kubernetes\env.dev.configmap.yaml
+		kubernetes\feeder.deployment.yaml = kubernetes\feeder.deployment.yaml
+		kubernetes\redis.deployment.yaml = kubernetes\redis.deployment.yaml
+		kubernetes\web.deployment.yaml = kubernetes\web.deployment.yaml
+		kubernetes\web.service.yaml = kubernetes\web.service.yaml
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3A8B8AEE-360F-4427-B8F8-4B1C82B2C7F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A8B8AEE-360F-4427-B8F8-4B1C82B2C7F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A8B8AEE-360F-4427-B8F8-4B1C82B2C7F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A8B8AEE-360F-4427-B8F8-4B1C82B2C7F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD3AC79B-1EBB-4B9D-AFAA-D2A2F4486437}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD3AC79B-1EBB-4B9D-AFAA-D2A2F4486437}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD3AC79B-1EBB-4B9D-AFAA-D2A2F4486437}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD3AC79B-1EBB-4B9D-AFAA-D2A2F4486437}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ECBB1A51-E3D6-468B-9F01-9E244EA114B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECBB1A51-E3D6-468B-9F01-9E244EA114B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECBB1A51-E3D6-468B-9F01-9E244EA114B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECBB1A51-E3D6-468B-9F01-9E244EA114B9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D50BDA20-0CA0-4AF2-B571-95E3E7D0582E} = {AB20EAFD-BDE7-4C99-91C6-4713CDBA32D1}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {11C68BA6-F9BC-4377-A9CB-4C86A11B1FF0}
+	EndGlobalSection
+EndGlobal
