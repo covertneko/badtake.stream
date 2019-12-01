@@ -14,18 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.dockerignore = .dockerignore
 		.gitignore = .gitignore
 		dev.env = dev.env
-		docker-compose.ecs.yml = docker-compose.ecs.yml
 		docker-compose.yml = docker-compose.yml
-		prod.env = prod.env
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "kubernetes", "kubernetes", "{D50BDA20-0CA0-4AF2-B571-95E3E7D0582E}"
-	ProjectSection(SolutionItems) = preProject
-		kubernetes\env.dev.configmap.yaml = kubernetes\env.dev.configmap.yaml
-		kubernetes\feeder.deployment.yaml = kubernetes\feeder.deployment.yaml
-		kubernetes\redis.deployment.yaml = kubernetes\redis.deployment.yaml
-		kubernetes\web.deployment.yaml = kubernetes\web.deployment.yaml
-		kubernetes\web.service.yaml = kubernetes\web.service.yaml
 	EndProjectSection
 EndProject
 Global
@@ -49,9 +38,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{D50BDA20-0CA0-4AF2-B571-95E3E7D0582E} = {AB20EAFD-BDE7-4C99-91C6-4713CDBA32D1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {11C68BA6-F9BC-4377-A9CB-4C86A11B1FF0}
