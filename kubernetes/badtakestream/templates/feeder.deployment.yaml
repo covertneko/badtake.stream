@@ -1,0 +1,36 @@
+{{- $fullName := include "badtakestream.fullname" . -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $fullName }}-feeder
+  labels:
+{{ include "badtakestream.labels" . | indent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "badtakestream.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/component: feeder
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "badtakestream.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/component: feeder
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ template "badtakestream.serviceAccountName" . }}
+      containers:
+        - image: cr.winkel.io/badtake.stream/feeder
+          name: feeder
+          resources: {}
+          envFrom:
+            - configMapRef:
+                name: {{ $fullName }}-env
+            - secretRef:
+                name: {{ $fullName }}-secrets
+      restartPolicy: Always

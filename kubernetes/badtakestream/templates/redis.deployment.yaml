@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "badtakestream.fullname" . }}-redis
+  labels:
+{{ include "badtakestream.labels" . | indent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "badtakestream.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/component: redis
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "badtakestream.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/component: redis
+    spec:
+      serviceAccountName: {{ template "badtakestream.serviceAccountName" . }}
+      containers:
+        - image: redis:alpine
+          name: redis
+          ports:
+            - name: redis
+              containerPort: 6379
+              protocol: TCP
+      restartPolicy: Always

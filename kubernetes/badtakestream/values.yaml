@@ -1,0 +1,32 @@
+replicaCount: 1
+
+serviceAccount:
+  create: true
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name:
+
+service:
+  port: 80
+  type:
+
+imagePullSecrets:
+  - name: regcred
+
+hostname:
+
+ingress:
+  enabled: true
+
+twitter:
+  credentials:
+    consumerKey:
+    consumerSecret:
+    accessToken:
+    accessSecret:
+
+database:
+  connectionString:
+
+applicationInsights:
+  key:
