@@ -66,7 +66,10 @@ namespace BadTakeStream.Feeder
                     depModule.Initialize(aiConfig);
 
                     var settings = provider.GetRequiredService<Settings>();
-                    services.AddDbContext<BadTakeContext>(options => options.UseNpgsql(settings.DatabaseConnectionString));
+                    services.AddDbContext<BadTakeContext>(options => options.UseNpgsql(
+                        settings.DatabaseConnectionString,
+                        p => p.MigrationsAssembly($"{nameof(BadTakeStream)}.Shared")
+                    ));
                 })
                 .UseConsoleLifetime();
     }

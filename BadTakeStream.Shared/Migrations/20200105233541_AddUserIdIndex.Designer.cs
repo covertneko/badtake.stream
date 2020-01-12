@@ -3,15 +3,17 @@ using System;
 using BadTakeStream.Shared.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace BadTakeStream.Shared.Migrations
 {
     [DbContext(typeof(BadTakeContext))]
-    partial class BadMemeContextModelSnapshot : ModelSnapshot
+    [Migration("20200105233541_AddUserIdIndex")]
+    partial class AddUserIdIndex
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

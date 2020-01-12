@@ -24,7 +24,13 @@ namespace BadTakeStream.Shared.Entities
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Models.HighScore>(e => e.HasNoKey());
+            // NOTE: ToView(null) prevents a table from being generated for a query type in EF Core 3.0
+            // See https://github.com/aspnet/EntityFrameworkCore/issues/18719
+            modelBuilder.Entity<Models.HighScore>(e => e.HasNoKey().ToView(null));
+
+            modelBuilder.Entity<Tweet>(e => {
+                e.HasIndex(e => e.UserId);
+            });
         }
     }
 
