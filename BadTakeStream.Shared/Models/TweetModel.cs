@@ -60,8 +60,8 @@ namespace BadTakeStream.Shared.Models
 
         public long Count { get; set; }
 
-        public string TopTweetUrl { get; set; }
-        public long TopTweetCount { get; set; }
+        //public string TopTweetUrl { get; set; }
+        //public long TopTweetCount { get; set; }
     }
 
     public class Metrics

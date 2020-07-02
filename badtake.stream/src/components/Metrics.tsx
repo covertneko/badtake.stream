@@ -220,9 +220,9 @@ const HighScores: React.FC<HighScoresProps> = (props) => {
             <TableCell>
               times ok'd
             </TableCell>
-            <TableCell>
+            {/* <TableCell>
               top tweet
-            </TableCell>
+            </TableCell> */}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -230,10 +230,10 @@ const HighScores: React.FC<HighScoresProps> = (props) => {
             <TableCell>
               {s.userDisplayName}
             </TableCell>
-            <TableCell title={formatTitle(s.topTweetCount)}>
+            <TableCell title={formatTitle(s.count)}>
               {formatCount(s.count)}
             </TableCell>
-            <TableCell>
+            {/* <TableCell>
               <Chip
                 href={s.topTweetUrl}
                 target="_blank"
@@ -243,7 +243,7 @@ const HighScores: React.FC<HighScoresProps> = (props) => {
                 label={formatCount(s.topTweetCount)}
                 title={formatTitle(s.topTweetCount)}
                 icon={<OpenInNew />} />
-            </TableCell>
+            </TableCell> */}
           </TableRow>))}
         </TableBody>
       </Table>
