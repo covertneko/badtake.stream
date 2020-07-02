@@ -68,7 +68,7 @@ namespace BadTakeStream.Feeder
                     var settings = provider.GetRequiredService<Settings>();
                     services.AddDbContext<BadTakeContext>(options => options.UseNpgsql(
                         settings.DatabaseConnectionString,
-                        p => p.MigrationsAssembly($"{nameof(BadTakeStream)}.Shared")
+                        p => p.MigrationsAssembly($"{nameof(BadTakeStream)}.Shared").CommandTimeout(300)
                     ));
                 })
                 .UseConsoleLifetime();

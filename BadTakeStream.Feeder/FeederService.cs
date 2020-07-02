@@ -22,9 +22,13 @@ namespace BadTakeStream.Feeder
     {
         private Settings _settings;
         private IServiceProvider _serviceProvider;
-        private Timer _timer;
+        private Timer _streamCheckTimer;
         private ConnectionMultiplexer _redis;
         private Tweetinvi.Streaming.IFilteredStream _stream;
+
+        private Timer _scoreUpdateTimer;
+        private List<HighScore> _currentScores;
+        private Metrics _currentMetrics;
 
         public FeederService(Settings settings, IServiceProvider serviceProvider)
         {
@@ -81,7 +85,10 @@ namespace BadTakeStream.Feeder
                 Log.Error(args.Exception, "Stream stopped: {DisconnectMessage}", args.DisconnectMessage);
 
             // Ensure stream is running every 30 seconds
-            _timer = new Timer(EnsureActive, null, TimeSpan.Zero, TimeSpan.FromSeconds(30));
+            _streamCheckTimer = new Timer(EnsureActive, null, TimeSpan.Zero, TimeSpan.FromSeconds(30));
+
+            // Calculate scores every 10 seconds
+            _scoreUpdateTimer = new Timer(CalculateScores, null, TimeSpan.Zero, TimeSpan.FromSeconds(10));
         }
 
         protected async Task OnMatchingTweetReceived(object sender, Tweetinvi.Events.MatchedTweetReceivedEventArgs args)
@@ -115,11 +122,49 @@ namespace BadTakeStream.Feeder
             }
         }
 
+        protected void CalculateScores(object state)
+        {
+            using var scope = _serviceProvider.CreateScope();
+            var db = scope.ServiceProvider.GetRequiredService<BadTakeContext>();
+
+            // Include top 5 scores, along with top tweet for each user
+            // TODO: review performance - this was bringing a t3.micro database server to its knees when running
+            //       every 2-3 seconds on a per-tweet basis
+            // TODO: revisit this - due to limitations in EF core when it comes to nested grouping and ordering
+            //       via LINQ to entities, raw sql was an easier option
+            _currentScores = db.HighScores.FromSqlRaw(@"
+                SELECT
+                    s.""Count"",
+                    s.""UserId"",
+                    s.""UserDisplayName"",
+                FROM ""Scores"" s
+                ORDER BY s.""Count"" DESC
+                LIMIT 5;
+            ").ToList();
+
+            // Calculate incoming tweet rate based on the last minute
+            var recently = DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(1));
+            var recentCount = db.Tweets.Where(t => t.InReplyTo != null && t.CreatedAt > recently).Count();
+            var rate = decimal.Round(recentCount / 60.0m, 2, MidpointRounding.AwayFromZero);
+
+            var today = DateTime.UtcNow.Date;
+
+            _currentMetrics = new Metrics
+            {
+                Rate = rate,
+                TotalToday = db.Tweets.Where(t => t.InReplyTo != null && t.CreatedAt > today).Count(),
+                Total = db.Tweets.Where(t => t.InReplyTo != null).Count(),
+                HighScores = _currentScores ?? new List<HighScore>()
+            };
+        }
+
         public Task StopAsync(CancellationToken cancellationToken)
         {
+            _scoreUpdateTimer?.Change(Timeout.Infinite, 0);
+
             Log.Information("Stopping stream");
 
-            _timer?.Change(Timeout.Infinite, 0);
+            _streamCheckTimer?.Change(Timeout.Infinite, 0);
 
             if (_stream != null && _stream.StreamState != Tweetinvi.Models.StreamState.Stop)
                 _stream.StopStream();
@@ -174,44 +219,6 @@ namespace BadTakeStream.Feeder
             db.SaveChanges();
 
             // Construct and send update to clients
-
-            // Include top 5 scores, along with top tweet for each user
-            // TODO: revisit this - due to limitations in EF core when it comes to nested grouping and ordering
-            //       via LINQ to entities, raw sql was an easier option
-            var highScores = db.HighScores.FromSqlRaw(@"
-                WITH tweets AS (
-                    SELECT
-                        t.""TwitterId"",
-                        t.""UserId"",
-                        COUNT(rt.*) ""ReplyCount""
-                    FROM ""Tweets"" t
-                    INNER JOIN ""Tweets"" rt ON rt.""InReplyToTwitterId"" = t.""TwitterId""
-                    GROUP BY t.""UserId"", t.""TwitterId""
-                ), topTweets AS(
-                    SELECT
-                        tweets.*,
-                        ROW_NUMBER() OVER(PARTITION BY ""UserId"" ORDER BY ""ReplyCount"" DESC) AS rn
-                    FROM tweets
-                )
-                SELECT
-                    s.""Count"",
-                    s.""UserId"",
-                    s.""UserDisplayName"",
-                    CONCAT('https://twitter.com/_/status/', tt.""TwitterId"") AS ""TopTweetUrl"",
-                    tt.""ReplyCount"" AS ""TopTweetCount""
-                FROM ""Scores"" s
-                INNER JOIN topTweets tt ON tt.""UserId"" = s.""UserId""
-                WHERE tt.rn = 1
-                ORDER BY s.""Count"" DESC, tt.""ReplyCount"" DESC
-                LIMIT 5;
-            ").ToList();
-
-            // Calculate incoming tweet rate based on the last minute
-            var recently = DateTime.UtcNow.Subtract(TimeSpan.FromMinutes(1));
-            var recentCount = db.Tweets.Where(t => t.InReplyTo != null && t.CreatedAt > recently).Count();
-            var rate = decimal.Round(recentCount / 60.0m, 2, MidpointRounding.AwayFromZero);
-
-            var today = DateTime.UtcNow.Date;
             var update = new FeedUpdate
             {
                 Match = new Match
@@ -219,13 +226,7 @@ namespace BadTakeStream.Feeder
                     Source = new TweetModel(source),
                     Target = new TweetModel(target)
                 },
-                Metrics = new Metrics
-                {
-                    Rate = rate,
-                    TotalToday = db.Tweets.Where(t => t.InReplyTo != null && t.CreatedAt > today).Count(),
-                    Total = db.Tweets.Where(t => t.InReplyTo != null).Count(),
-                    HighScores = highScores
-                }
+                Metrics = _currentMetrics
             };
 
             // Notify clients
@@ -234,7 +235,7 @@ namespace BadTakeStream.Feeder
 
         public void Dispose()
         {
-            _timer?.Dispose();
+            _streamCheckTimer?.Dispose();
         }
     }
 }
