@@ -136,7 +136,7 @@ namespace BadTakeStream.Feeder
                 SELECT
                     s.""Count"",
                     s.""UserId"",
-                    s.""UserDisplayName"",
+                    s.""UserDisplayName""
                 FROM ""Scores"" s
                 ORDER BY s.""Count"" DESC
                 LIMIT 5;
